@@ -3,8 +3,7 @@ from typing import Self
 from abc import ABC, abstractmethod
 from enum import Enum
 from dataclasses import dataclass
-
-INDENT = "    "
+from string_builder import StringBuilder
 
 class Language(Enum):
     PYTHON = "python"
@@ -62,22 +61,23 @@ class ClassBuilder(CodeBuilder):
         return self
     
     def build(self, language: Language) -> str:
-        result = ""
+        sb = StringBuilder()
 
         if language == Language.PYTHON:
-            result += f"class {self.__name}:\n"
+            sb.add_line(f"class {self.__name}:")
             for attribute in self.__attributes:
-                result += f"{INDENT}{attribute.name}: {get_type(language, attribute.type)}\n"
+                sb.add_line(f"{attribute.name}: {get_type(language, attribute.type)}", indent=1)
 
         if language == Language.ELM:
-            result += f"type alias {self.__name} = " + "{\n"
+            sb.add_line(f"type alias {self.__name} =")
 
-            for attribute in self.__attributes:
-                result += f"{INDENT}{attribute.name} : {get_type(language, attribute.type)},\n"
+            for index, attribute in enumerate(self.__attributes):
+                start = "{ " if index == 0 else ", "
+                sb.add_line(f"{start}{attribute.name} : {get_type(language, attribute.type)}", indent=1)
 
-            result += "}"
+            sb.add_line("}", indent=1)
 
-        return result
+        return sb.build()
 
 def class_builder():
     return ClassBuilder()
@@ -86,7 +86,8 @@ cls = (
     class_builder()
     .name("Person")
     .attribute("name", Type.STRING)
-    .build(Language.ELM)
+    .attribute("age", Type.INT)
+    .build(Language.PYTHON)
 )
 
 print(cls)
