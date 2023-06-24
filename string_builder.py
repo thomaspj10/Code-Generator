@@ -12,5 +12,8 @@ class StringBuilder:
     def add_line(self, line: str, indent: int = 0):
         self.__lines.append((self.__indent_str * indent) + line)
 
+    def empty_line(self):
+        self.__lines.append("")
+
     def build(self) -> str:
         return "\n".join(self.__lines)
