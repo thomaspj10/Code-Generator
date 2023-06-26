@@ -5,3 +5,8 @@ from dataclasses import dataclass
 class Person:
     name: str
     age: int
+    address: Address
+@dataclass
+class Address:
+    street: str
+    number: int

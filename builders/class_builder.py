@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from builders.code_builder import CodeBuilder
 
 from dataclasses import dataclass
@@ -9,7 +11,7 @@ from type import Type, get_type
 @dataclass
 class Attribute:
     name: str
-    type: Type
+    type: Type | ClassBuilder
 
 class ClassBuilder(CodeBuilder):
     
@@ -24,9 +26,14 @@ class ClassBuilder(CodeBuilder):
         self.__name = name
         return self
     
-    def attribute(self, name: str, type: Type) -> Self:
+    def attribute(self, name: str, type: Type | ClassBuilder) -> Self:
         self.__attributes.append(Attribute(name, type))
         return self
+    
+    def _get_type(self, language: Language, attribute: Attribute) -> str:
+        if isinstance(attribute.type, ClassBuilder):
+            return attribute.type.__name
+        return get_type(language, attribute.type) 
     
     def build(self, language: Language) -> str:
         sb = StringBuilder()
@@ -35,14 +42,14 @@ class ClassBuilder(CodeBuilder):
             sb.add_line("@dataclass")
             sb.add_line(f"class {self.__name}:")
             for attribute in self.__attributes:
-                sb.add_line(f"{attribute.name}: {get_type(language, attribute.type)}", indent=1)
+                sb.add_line(f"{attribute.name}: {self._get_type(language, attribute)}", indent=1)
 
         if language == Language.ELM:
             sb.add_line(f"type alias {self.__name} =")
 
             for index, attribute in enumerate(self.__attributes):
                 start = "{ " if index == 0 else ", "
-                sb.add_line(f"{start}{attribute.name} : {get_type(language, attribute.type)}", indent=1)
+                sb.add_line(f"{start}{attribute.name} : {self._get_type(language, attribute)}", indent=1)
 
             sb.add_line("}", indent=1)
 
