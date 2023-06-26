@@ -11,4 +11,3 @@ cls = (
 
 file_builder("Types.elm").add(cls).save("./elm/src/", Language.ELM)
 file_builder("types.py").add(cls).save("./python/", Language.PYTHON)
-

@@ -24,6 +24,7 @@ class FileBuilder(CodeBuilder):
 
         if language == Language.PYTHON:
             sb.add_line("from __future__ import annotations")
+            sb.add_line("from dataclasses import dataclass")
             sb.empty_line()
             sb.empty_line()
 

@@ -32,6 +32,7 @@ class ClassBuilder(CodeBuilder):
         sb = StringBuilder()
 
         if language == Language.PYTHON:
+            sb.add_line("@dataclass")
             sb.add_line(f"class {self.__name}:")
             for attribute in self.__attributes:
                 sb.add_line(f"{attribute.name}: {get_type(language, attribute.type)}", indent=1)
