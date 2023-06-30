@@ -17,5 +17,5 @@ person_cls = (
     .attribute("address", address_cls)
 )
 
-file_builder("Types.elm").add(person_cls).add(address_cls).save("./elm/src/", Language.ELM)
-file_builder("types.py").add(person_cls).add(address_cls).save("./python/", Language.PYTHON)
+file_builder("Types.elm").add(person_cls).save("./elm/src/", Language.ELM)
+file_builder("types.py").add(person_cls).save("./python/", Language.PYTHON)

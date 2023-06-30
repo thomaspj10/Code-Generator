@@ -17,6 +17,11 @@ class FileBuilder(CodeBuilder):
 
     def add(self, builder: CodeBuilder) -> Self:
         self.__builders.append(builder)
+
+        for required_builder in builder._required_builders:
+            if required_builder not in self.__builders:
+                self.__builders.append(required_builder)
+
         return self
 
     def build(self, language: Language) -> str:

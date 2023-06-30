@@ -19,6 +19,7 @@ class ClassBuilder(CodeBuilder):
     __attributes: list[Attribute]
 
     def __init__(self) -> None:
+        super().__init__()
         self.__name = ""
         self.__attributes = []
 
@@ -27,6 +28,9 @@ class ClassBuilder(CodeBuilder):
         return self
     
     def attribute(self, name: str, type: Type | ClassBuilder) -> Self:
+        if isinstance(type, ClassBuilder):
+            self._add_required_builder(type)
+
         self.__attributes.append(Attribute(name, type))
         return self
     
