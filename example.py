@@ -15,6 +15,7 @@ person = (
     .attribute("name", Type.STRING)
     .attribute("age", Type.INT)
     .attribute("address", Type.LIST, [address])
+    .attribute("names", Type.LIST, [Type.STRING])
 )
 
 builder = file_builder().add(person)

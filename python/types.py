@@ -6,6 +6,7 @@ class Person:
     name: str
     age: int
     address: list[Address]
+    names: list[str]
 @dataclass
 class Address:
     street: str

@@ -44,7 +44,7 @@ class ClassBuilder(CodeBuilder):
         generic_arguments: list[str] = []
         for item in attribute.generic_arguments:
             if isinstance(item, Type):
-                generic_arguments.append(item.name)
+                generic_arguments.append(get_type(language, item, []))
             else:
                 generic_arguments.append(item.__name)
 
