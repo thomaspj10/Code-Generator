@@ -19,14 +19,10 @@ class ClassBuilder(CodeBuilder):
     __name: str
     __attributes: list[Attribute]
 
-    def __init__(self) -> None:
+    def __init__(self, name: str) -> None:
         super().__init__()
-        self.__name = ""
-        self.__attributes = []
-
-    def name(self, name: str) -> Self:
         self.__name = name
-        return self
+        self.__attributes = []
     
     def attribute(self, name: str, type: Type, generic_arguments: list[Type | ClassBuilder] | None = None) -> Self:
         if generic_arguments != None:
@@ -70,5 +66,5 @@ class ClassBuilder(CodeBuilder):
 
         return sb.build()
 
-def class_builder():
-    return ClassBuilder()
+def class_builder(name: str):
+    return ClassBuilder(name)

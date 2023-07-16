@@ -3,15 +3,13 @@ from language import Language
 from type import Type
 
 address = (
-    class_builder()
-    .name("Address")
+    class_builder("Address")
     .attribute("street", Type.STRING)
     .attribute("number", Type.INT)
 )
 
 person = (
-    class_builder()
-    .name("Person")
+    class_builder("Person")
     .attribute("name", Type.STRING)
     .attribute("age", Type.INT)
     .attribute("address", Type.LIST, [address])
