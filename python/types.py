@@ -5,7 +5,7 @@ from dataclasses import dataclass
 class Person:
     name: str
     age: int
-    address: Address
+    address: list[Address]
 @dataclass
 class Address:
     street: str

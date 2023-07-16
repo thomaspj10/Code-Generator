@@ -12,6 +12,7 @@ from type import Type, get_type
 class Attribute:
     name: str
     type: Type | ClassBuilder
+    generic_arguments: list[Type | ClassBuilder]
 
 class ClassBuilder(CodeBuilder):
     
@@ -27,17 +28,27 @@ class ClassBuilder(CodeBuilder):
         self.__name = name
         return self
     
-    def attribute(self, name: str, type: Type | ClassBuilder) -> Self:
-        if isinstance(type, ClassBuilder):
-            self._add_required_builder(type)
+    def attribute(self, name: str, type: Type, generic_arguments: list[Type | ClassBuilder] | None = None) -> Self:
+        if generic_arguments != None:
+            for argument in generic_arguments:
+                if isinstance(argument, ClassBuilder):
+                    self._add_required_builder(argument)
 
-        self.__attributes.append(Attribute(name, type))
+        self.__attributes.append(Attribute(name, type, [] if generic_arguments == None else generic_arguments))
         return self
     
     def _get_type(self, language: Language, attribute: Attribute) -> str:
         if isinstance(attribute.type, ClassBuilder):
             return attribute.type.__name
-        return get_type(language, attribute.type) 
+        
+        generic_arguments: list[str] = []
+        for item in attribute.generic_arguments:
+            if isinstance(item, Type):
+                generic_arguments.append(item.name)
+            else:
+                generic_arguments.append(item.__name)
+
+        return get_type(language, attribute.type, generic_arguments) 
     
     def build(self, language: Language) -> str:
         sb = StringBuilder()
