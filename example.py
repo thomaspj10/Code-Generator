@@ -14,6 +14,7 @@ person = (
     .attribute("age", Type.INT)
     .attribute("address", Type.LIST, [address])
     .attribute("names", Type.LIST, [Type.STRING])
+    .attribute("paypal_email", Type.MAYBE, [Type.STRING])
 )
 
 builder = file_builder().add(person)

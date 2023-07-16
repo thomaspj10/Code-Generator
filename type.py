@@ -7,6 +7,7 @@ class Type(Enum):
     FLOAT = "float"
     CLASS = "class"
     LIST = "list"
+    MAYBE = "maybe"
 
 TYPE_MAPPING: dict[Type, dict[Language, str]] = {
     Type.STRING: {
@@ -28,6 +29,10 @@ TYPE_MAPPING: dict[Type, dict[Language, str]] = {
     Type.LIST: {
         Language.PYTHON: "list[{0}]",
         Language.ELM: "List {0}"
+    },
+    Type.MAYBE: {
+        Language.PYTHON: "{0} | None",
+        Language.ELM: "Maybe {0}"
     },
 }
 
