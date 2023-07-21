@@ -112,7 +112,7 @@ def generate_python(dtos: list[CustomDto]) -> str:
 
     for dto in dtos:
         result += "\n@dataclass\n"
-        result += f"class {dto.name}\n"
+        result += f"class {dto.name}:\n"
         for attribute in dto.attributes:
             result += f"{INDENT}{attribute.name}: {type_to_code(attribute.type, Language.PYTHON)}\n"
         
