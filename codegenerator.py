@@ -1,14 +1,9 @@
 from __future__ import annotations
-from enum import Enum
 from dataclasses import dataclass
 from language import Language, format_class_name
+from type import Type, get_type
 
-class Type(Enum):
-    INT = "int"
-    STRING = "string"
-    LIST = "list"
-    CLASS = "class"
-    MAYBE = "maybe"
+DTOS: list[CustomDto] = []
 
 class CustomType:
     
@@ -19,39 +14,6 @@ class CustomType:
         self.type = type
         self.generic_arguments = generic_arguments
 
-TYPE_MAPPING: dict[Type, dict[Language, str]] = {
-    Type.STRING: {
-        Language.PYTHON: "str",
-        Language.ELM: "String",
-        Language.ELM_DECODERS: "JD.string",
-        Language.ELM_ENCODERS: "JE.string",
-    },
-    Type.INT: {
-        Language.PYTHON: "int",
-        Language.ELM: "Int",
-        Language.ELM_DECODERS: "JD.int",
-        Language.ELM_ENCODERS: "JE.int",
-    },
-    Type.CLASS: {
-        Language.PYTHON: "{0}",
-        Language.ELM: "{0}",
-        Language.ELM_DECODERS: "{0}",
-        Language.ELM_ENCODERS: "{0}",
-    },
-    Type.LIST: {
-        Language.PYTHON: "list[{0}]",
-        Language.ELM: "List ({0})",
-        Language.ELM_DECODERS: "JD.list ({0})",
-        Language.ELM_ENCODERS: "JE.list ({0})",
-    },
-    Type.MAYBE: {
-        Language.PYTHON: "{0} | None",
-        Language.ELM: "Maybe ({0})",
-        Language.ELM_DECODERS: "JD.maybe ({0})",
-        Language.ELM_ENCODERS: "{0}",
-    },
-}
-
 def list_(type: CustomType | Type):
     return CustomType(Type.LIST, [CustomType(type, [])])
 
@@ -60,6 +22,7 @@ def cls(dto: CustomDto):
 
 def maybe(type: CustomType | Type):
     return CustomType(Type.MAYBE, [CustomType(type, [])])
+
 
 @dataclass
 class Attribute:
@@ -74,6 +37,7 @@ class CustomDto:
     def __init__(self, name: str) -> None:
         self.name = name
         self.attributes = []
+        DTOS.append(self)
 
     def attribute(self, name: str, type: CustomType | Type):
         if isinstance(type, Type):
@@ -82,25 +46,6 @@ class CustomDto:
         self.attributes.append(Attribute(name, type))
 
         return self
-
-address = (
-    CustomDto("Address")
-    .attribute("id", Type.INT)
-    .attribute("name", Type.STRING)
-)
-
-person = (
-    CustomDto("Person")
-    .attribute("id", Type.INT)
-    .attribute("name", Type.STRING)
-    .attribute("address", cls(address))
-)
-
-type = cls(address)
-type2 = list_(maybe(cls(address)))
-
-def get_type(language: Language, type: Type, generic_arguments: list[str]):
-    return TYPE_MAPPING[type][language].format(*generic_arguments)
 
 def type_to_code(custom_type: CustomType, language: Language) -> str:
     if isinstance(custom_type.type, str):
@@ -185,4 +130,10 @@ def generate_elm_encoders(dtos: list[CustomDto]) -> str:
 
     return result
 
-print(generate_elm([address, person]))
+def store_python(file: str):
+    with open(file, "w") as f:
+        f.write(generate_python(DTOS))
+
+def store_elm(file: str):
+    with open(file, "w") as f:
+        f.write(generate_elm(DTOS))
