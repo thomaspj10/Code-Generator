@@ -123,6 +123,8 @@ def generate_elm(dtos: list[CustomDto]) -> str:
     INDENT = " " * 4
     result = ""
 
+    result += "module Types exposing (..)\n\n"
+
     result += "import Json.Decode as JD\n"
     result += "import Json.Encode as JE\n"
     result += "import Json.Decode.Pipeline as JDP\n"
@@ -155,7 +157,7 @@ def generate_elm_decoders(dtos: list[CustomDto]) -> str:
         result += f"{INDENT}JD.succeed {dto.name}\n"
 
         for attribute in dto.attributes:
-            result += f"{INDENT * 2}|> JDP.required \"{attribute.name}\" {type_to_code(attribute.type, Language.ELM_DECODERS)}\n"
+            result += f"{INDENT * 2}|> JDP.required \"{attribute.name}\" ({type_to_code(attribute.type, Language.ELM_DECODERS)})\n"
 
     return result
 
@@ -172,7 +174,7 @@ def generate_elm_encoders(dtos: list[CustomDto]) -> str:
 
         for index, attribute in enumerate(dto.attributes):
             char = "[" if index == 0 else ","
-            result += f"{INDENT * 2}{char} ( \"{attribute.name}\", {type_to_code(attribute.type, Language.ELM_ENCODERS)} object.{attribute.name} )\n"
+            result += f"{INDENT * 2}{char} ( \"{attribute.name}\", ({type_to_code(attribute.type, Language.ELM_ENCODERS)} object.{attribute.name}) )\n"
         result += INDENT * 2 + "]\n"
 
     return result
