@@ -1,6 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
-from language import Language, format_class_name
+from codegen.language import Language, format_class_name
 
 from enum import Enum
 
@@ -107,7 +107,7 @@ def generate_python(dtos: list[CustomDto]) -> str:
     INDENT = " " * 4
     result = ""
     
-    result += "from annotations import __future__\n"
+    result += "from __future__ import annotations\n"
     result += "from dataclasses import dataclass\n"
 
     for dto in dtos:
