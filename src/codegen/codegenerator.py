@@ -28,8 +28,8 @@ TYPE_MAPPING: dict[Type, dict[Language, str]] = {
     Type.BOOLEAN: {
         Language.PYTHON: "bool",
         Language.ELM: "Bool",
-        Language.ELM_DECODERS: "JD.boolean",
-        Language.ELM_ENCODERS: "JE.boolean",
+        Language.ELM_DECODERS: "JD.bool",
+        Language.ELM_ENCODERS: "JE.bool",
     },
     Type.CLASS: {
         Language.PYTHON: "{0}",
