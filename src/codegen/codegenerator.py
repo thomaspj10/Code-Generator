@@ -7,6 +7,7 @@ from enum import Enum
 class Type(Enum):
     INT = "int"
     STRING = "string"
+    BOOLEAN = "boolean"
     LIST = "list"
     CLASS = "class"
     MAYBE = "maybe"
@@ -23,6 +24,12 @@ TYPE_MAPPING: dict[Type, dict[Language, str]] = {
         Language.ELM: "Int",
         Language.ELM_DECODERS: "JD.int",
         Language.ELM_ENCODERS: "JE.int",
+    },
+    Type.BOOLEAN: {
+        Language.PYTHON: "bool",
+        Language.ELM: "Bool",
+        Language.ELM_DECODERS: "JD.boolean",
+        Language.ELM_ENCODERS: "JE.boolean",
     },
     Type.CLASS: {
         Language.PYTHON: "{0}",
