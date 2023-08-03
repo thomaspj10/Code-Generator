@@ -47,7 +47,7 @@ TYPE_MAPPING: dict[Type, dict[Language, str]] = {
         Language.PYTHON: "{0} | None",
         Language.ELM: "Maybe ({0})",
         Language.ELM_DECODERS: "JD.maybe ({0})",
-        Language.ELM_ENCODERS: "{0}",
+        Language.ELM_ENCODERS: "encodeNullable {0}",
     },
 }
 
@@ -135,6 +135,17 @@ def generate_elm(dtos: list[CustomDto]) -> str:
     result += "import Json.Decode as JD\n"
     result += "import Json.Encode as JE\n"
     result += "import Json.Decode.Pipeline as JDP\n"
+
+    result += """
+encodeNullable : (value -> JE.Value) -> Maybe value -> JE.Value
+encodeNullable valueEncoder maybeValue =
+    case maybeValue of
+        Just value ->
+            valueEncoder value
+
+        Nothing ->
+            JE.null
+"""
 
     # Generate the models
     for dto in dtos:
