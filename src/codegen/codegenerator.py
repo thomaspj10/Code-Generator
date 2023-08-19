@@ -55,7 +55,7 @@ def get_type(language: Language, type: Type, generic_arguments: list[str]):
     return TYPE_MAPPING[type][language].format(*generic_arguments)
 
 
-DTOS: list[CustomDto] = []
+dtos: list[CustomDto] = []
 
 class CustomType:
     
@@ -91,7 +91,7 @@ class CustomDto:
     def __init__(self, name: str) -> None:
         self.name = name
         self.attributes = []
-        DTOS.append(self)
+        dtos.append(self)
 
     def attribute(self, name: str, type: CustomType | Type):
         if isinstance(type, Type):
@@ -199,8 +199,12 @@ def generate_elm_encoders(dtos: list[CustomDto]) -> str:
 
 def store_python(file: str):
     with open(file, "w") as f:
-        f.write(generate_python(DTOS))
+        f.write(generate_python(dtos))
 
 def store_elm(file: str):
     with open(file, "w") as f:
-        f.write(generate_elm(DTOS))
+        f.write(generate_elm(dtos))
+
+def clear():
+    global dtos
+    dtos = []
