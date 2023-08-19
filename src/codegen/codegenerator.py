@@ -126,11 +126,11 @@ def generate_python(dtos: list[CustomDto]) -> str:
 
     return result
 
-def generate_elm(dtos: list[CustomDto]) -> str:
+def generate_elm(dtos: list[CustomDto], module: str) -> str:
     INDENT = " " * 4
     result = ""
 
-    result += "module Types exposing (..)\n\n"
+    result += f"module {module} exposing (..)\n\n"
 
     result += "import Json.Decode as JD\n"
     result += "import Json.Encode as JE\n"
@@ -201,9 +201,9 @@ def store_python(file: str):
     with open(file, "w") as f:
         f.write(generate_python(dtos))
 
-def store_elm(file: str):
+def store_elm(file: str, module: str):
     with open(file, "w") as f:
-        f.write(generate_elm(dtos))
+        f.write(generate_elm(dtos, module))
 
 def clear():
     global dtos
